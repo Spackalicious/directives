@@ -1,0 +1,84 @@
+/* NGIF AND NGFOR ARE STRUCTURAL directives */
+/* we've also learned 2 attribute directives, ngClass and ngStyle, but there are lots! */
+
+/* 
+Angular is able to render your templates without a dom and then these properties might not be available. 
+It's not a good practice to directly access your elements.
+Styling using the basic-highlight-directive.ts is not wise. 
+Use Renderer instead.
+*/
+
+/* 
+Angular is not limited to working in the browser. It can also work with service workers. 
+These are environments where you might not have access to the DOM. 
+So if you try to change the DOM like basic highlight by directly accessing the native element and the style of this element,  you might get an error in some circumstances. 
+In most circumstances, you probably don't and you probably know if the app is going to run in the browser or not, still
+it is a better practice to use the renderer for dom access
+and to use the methods the renderer provides to access the dom.
+*/
+
+/* 
+mouseenter is an event supported by the DOM elements that @HostListener sits on
+*/
+
+/* 
+with host binding, you can bind to any property of the element you're sitting on.
+*/
+
+/* 
+Custom Property Binding
+Custom Event Binding also works on directives, but you probably won't use it that often.
+*/
+
+/* 
+how does Angular know if you want to bind to a property of paragraph, which of course doesn't have a defaultColor, or to a property of our directive? It just figures it out.
+It checks our own directives first, before it reaches the native properties of elements. 
+We can bind to properties of our own directives by simply placing them on the same properties, enclosed in square brackets.
+For ngClass, you see that somehow, the directive itself is enclosed in square brackets, and this is a typical use case esp if you only have one main property to bind, then you can provide an alias inside the parentheses (like @Input('alias') and set it equal to the selector (@Input('appBetterHighlight'))
+aliases are optional! normally, directive names are not enclosed in square brackets. 
+only happens if you want to bind toa  property that has the same name/alias like your directive selector.
+*/
+
+/* 
+One other thing which is true of property binding in general: if you pass down a string with square brackets and single quotation marks, you can take a shortcut by removing the square brackets and remove hte single quotation marks, so like defaultColor="yellow", will work as it did before, without error. Be careful that if you use it, that this is really clear that it's property binding, that no one thinks this is a real attribute existing for hte element to place it on, then you can use this. 
+*/
+
+/* 
+the star indicates that this is a STRUCTURAL DIRECTIVE. ngFor or ngIf
+angular needs to know bc structural directives with a star are just a nicer way for us to use them.
+behind the scenes, angular will transform them into something else, because there is no star in angular syntax when using directives or property binding or anything like that. 
+There is only property binding, event binding, 2way binding, and string interpolation. There is no star operator or something like that. 
+So behind the scenes, angular needs to transform this ngIf usage into something where we end up with these tools (just listed). And it does.
+I can write the same list differently from app-component.html :
+    <div *ngIf="!onlyOdd">
+      <li
+        class="list-group-item"
+        [ngClass]="{odd: even % 2 !== 0}"
+        [ngStyle]="{backgroundColor: even % 2 !== 0 ? 'yellow' : 'transparent'}"
+        *ngFor="let even of evenNumbers"
+        >
+        {{ even }}
+      </li>
+    </div> 
+
+as
+    <ng-template [ngIf]="!onlyOdd">
+      <div>
+        <li
+          class="list-group-item"
+          [ngClass]="{odd: even % 2 !== 0}"
+          [ngStyle]="{backgroundColor: even % 2 !== 0 ? 'yellow' : 'transparent'}"
+          *ngFor="let even of evenNumbers"
+        >
+        {{ even }}
+        </li>
+      </div>
+    </ng-template> 
+
+It is basically the same, just wrapped in <ng-template> The reason for this is that <ng-template> itself is an element which is not rendered but which allows us to define a template in the end for angular to use once it determines that this template/element needs to be rendered.
+So we can have the exact same code displayed twice, because angular transforms the thing with the * to the one below without the *. 
+*/
+
+/* 
+Another structural directive is ngSwitch.
+*/
